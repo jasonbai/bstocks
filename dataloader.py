@@ -6,6 +6,7 @@ import copy
 
 print("开始更新数据...")
 
+# 下载指数数据
 def fetch_index_data(symbol, start_date, end_date, period="daily", hdf5_path="data/index_data.h5"):
     # 确保目录存在
     os.makedirs(os.path.dirname(hdf5_path), exist_ok=True)
@@ -52,6 +53,7 @@ def fetch_index_data(symbol, start_date, end_date, period="daily", hdf5_path="da
 
     return combined_data
 
+# 下载指数成份股的历史数据
 def fetch_index_all(symbol, start_date, end_date, period="daily", hdf5_path="data/index_all.h5"):
     # 确保目录存在
     os.makedirs(os.path.dirname(hdf5_path), exist_ok=True)
@@ -114,16 +116,19 @@ def fetch_index_all(symbol, start_date, end_date, period="daily", hdf5_path="dat
 
     return combined_data_all
 
+# 更新指数数据
 def update_indices(symbols, start_date, end_date, period="daily"):
     for symbol in symbols:
         print(f"Updating data for symbol: {symbol}")
         fetch_index_data(symbol, start_date, end_date, period)
 
+# 更新指数成份股的历史数据
 def update_indices_all(symbols, start_date, end_date, period="daily"):
     for symbol in symbols:
         print(f"Updating data for symbol: {symbol}")
         fetch_index_all(symbol, start_date, end_date, period)
 
+# 主函数
 if __name__ == "__main__":
     symbols = ["000300", # 沪深300指数
                "399006", # 创业板指数
