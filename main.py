@@ -11,9 +11,8 @@ def add_custom_css():
     custom_css = """
     <style>
     .main  {
-        padding-right: 60rem;
+        padding-right: 30rem;
     }
-    </style>
     """
     st.markdown(custom_css, unsafe_allow_html=True)
 
@@ -24,14 +23,14 @@ if __name__ == "__main__":
     st.sidebar.markdown("作者：尾灯白（GitHub：jasonbai）")
     st.sidebar.markdown("项目介绍：[stockdashboard](https://github.com/jasonbai)")
     selection = st.sidebar.radio("当前支持的分析图表：",
-                                 ["使用说明","国内市场", "海外市场", "模型专题", "基金专题"
+                                 ["复盘日报","国内市场宽度", "海外市场", "模型专题", "基金专题"
                                   , "开发测试"
                                   ])
-    if  selection == "使用说明":
-        from statement import statement_func
+    if  selection == "复盘日报":
+        from dailyreview import statement_func
         statement_func()
-    if selection == "国内市场":
-        from stock import stock_market_analysis
+    if selection == "国内市场宽度":
+        from stockwidth import stock_market_analysis
         stock_market_analysis()
     if selection == "海外市场":
         from test import test_func

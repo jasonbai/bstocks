@@ -4,7 +4,7 @@ import akshare as ak
 from datetime import datetime, timedelta
 import copy
 
-print("开始更新数据...")
+print("开始更新市场宽度数据...")
 
 # 下载指数数据
 def fetch_index_data(symbol, start_date, end_date, period="daily", hdf5_path="data/index_data.h5"):
@@ -146,4 +146,4 @@ if __name__ == "__main__":
     
     update_indices(symbols, start_date_copy, end_date_copy)
     update_indices_all(symbols, start_date_copy, end_date_copy)
-    print("数据更新完毕.")
+    print("市场宽度数据更新完毕.")
