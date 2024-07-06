@@ -2,6 +2,7 @@ import akshare as ak
 import pandas as pd
 from datetime import datetime, timedelta
 
+# 指数数据下载器
 class IndexAnalyzer:
     def __init__(self, period, start_date, end_date, index_codes, index_names):
         self.period = period
@@ -73,9 +74,45 @@ class IndexAnalyzer:
 
         return result_df
     
+# ETF数据下载器
+class ETFAnalyzer:
+    def __init__(self, etf_list, start_date, end_date):
+        self.etf_list = etf_list
+        self.start_date = start_date
+        self.end_date = end_date
+        self.result_df = pd.DataFrame(columns=["ETF名称", "ETF代码", "最新价", "今日涨幅", "近1周涨幅", "近30天涨幅"])
 
+    def get_etf_data(self, etf_code):
+        etf_data = ak.fund_etf_hist_em(symbol=etf_code, start_date=self.start_date, end_date=self.end_date)
+        return etf_data
+
+    def calculate_percentage_change(self, data, column_name):
+        data[column_name] = (data[column_name].pct_change() * 100).round(2)
+        return data
+
+    def get_etf_statistics(self, etf_name, etf_code, data):
+        latest_data = data.iloc[-1]
+        statistics = {
+            "ETF名称": etf_name,
+            "ETF代码": etf_code,
+            "最新价": latest_data['收盘'],
+            "今日涨幅": latest_data['涨跌幅'].astype(str) + '%',
+            "近1周涨幅": data['涨跌幅'].tail(5).sum().round(2).astype(str) + '%',
+            "近30天涨幅": data['涨跌幅'].tail(30).sum().round(2).astype(str) + '%',
+        }
+        return statistics
+
+    def get_combined_etf_statistics(self):
+        for etf_name, etf_code in self.etf_list.items():
+            etf_data = self.get_etf_data(etf_code)
+            statistics = self.get_etf_statistics(etf_name, etf_code, etf_data)
+            statistics_df = pd.DataFrame([statistics])
+            self.result_df = pd.concat([self.result_df, statistics_df], ignore_index=True)
+        return self.result_df
+    
 # 主函数
 if __name__ == "__main__":
+    # 指数数据下载器测试
     index_codes = ["000001", "399001", "399006", "000688"]
     index_names = ["上证指数", "深圳指数", "创业板", "科创板"]
     start_date = (datetime.now() - timedelta(days=60)).strftime("%Y%m%d")
@@ -83,3 +120,72 @@ if __name__ == "__main__":
     analyzer = IndexAnalyzer("daily", start_date, end_date, index_codes, index_names)
     result = analyzer.get_index_statistics(start_date, end_date)
     result.to_csv("data/index_statistics.csv")
+
+    # 国内宽基ETF数据下载器
+    etf_list1 = {
+    "上证50ETF": "510050",
+    "中证500ETF": "159922",
+    "沪深300": "510300",
+    "红利ETF": "510880",
+    "创业板ETF": "159915",
+    "恒生ETF": "159920"
+    }
+    analyzer = ETFAnalyzer(etf_list1, start_date, end_date)
+    etf_stat_1 = analyzer.get_combined_etf_statistics()
+    etf_stat_1['近1周涨幅'] = etf_stat_1['近1周涨幅'].str.rstrip('%').astype('float')
+    etf_stat_1 = etf_stat_1.sort_values(by='近1周涨幅', ascending=False)
+    etf_stat_1['近1周涨幅'] = (etf_stat_1['近1周涨幅']).round(2).astype(str) + '%'
+    etf_stat_1.to_csv("data/etf_statistics1.csv")
+
+    # 全球主要ETF数据下载器
+    etf_list2 = {
+    "日经ETF": "513520",
+    "上证50ETF": "510050",
+    "沪深300": "510300",
+    "德国ETF": "513030",
+    "法国CAC40ETF": "513080",
+    "恒生ETF": "159920",
+    "标普500ETF": "513500",
+    "纳斯达克ETF": "159632",
+    "黄金ETF": "518880",
+    "石油ETF": "561360"
+    }
+    analyzer = ETFAnalyzer(etf_list2, start_date, end_date)
+    etf_stat_2 = analyzer.get_combined_etf_statistics()
+    etf_stat_2['近1周涨幅'] = etf_stat_2['近1周涨幅'].str.rstrip('%').astype('float')  # 将字符串转换为数值
+    etf_stat_2 = etf_stat_2.sort_values(by='近1周涨幅', ascending=False)
+    etf_stat_2['近1周涨幅'] = (etf_stat_2['近1周涨幅']).round(2).astype(str) + '%'
+    etf_stat_2.to_csv("data/etf_statistics2.csv")
+
+    # 行业ETF数据下载器
+    etf_list3 = {
+    "电力ETF": "159611",
+    "中概互联网ETF": "513050",
+    "证券ETF": "512880",
+    "医疗ETF": "512170",
+    "芯片ETF": "159995",
+    "半导体ETF": "512480",
+    "黄金ETF": "518880",
+    "光伏ETF": "515790",
+    "酒ETF": "512690",
+    "消费ETF": "159928",
+    "军工ETF": "512660",
+    "新能源车ETF": "515030",
+    "创新药ETF": "159992",
+    "游戏ETF": "159869",
+    "养殖ETF": "159865",
+    "有色金属ETF": "512400",
+    "房地产ETF": "512200",
+    "传媒ETF": "512980",
+    "旅游ETF": "159766",
+    "光伏ETF": "159857",
+    "煤炭ETF": "515220",
+    "通信ETF": "515880",
+    "传媒ETF": "512980"
+    }
+    analyzer = ETFAnalyzer(etf_list3, start_date, end_date)
+    etf_stat_3 = analyzer.get_combined_etf_statistics()
+    etf_stat_3['近1周涨幅'] = etf_stat_3['近1周涨幅'].str.rstrip('%').astype('float')  # 将字符串转换为数值
+    etf_stat_3 = etf_stat_3.sort_values(by='近1周涨幅', ascending=False)
+    etf_stat_3['近1周涨幅'] = (etf_stat_3['近1周涨幅']).round(2).astype(str) + '%'
+    etf_stat_3.to_csv("data/etf_statistics3.csv")
