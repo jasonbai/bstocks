@@ -13,7 +13,7 @@ def add_custom_css():
     custom_css = """
     <style>
     .main  {
-        padding-right: 20rem;
+        padding-right: 40rem;
     }
     """
     st.markdown(custom_css, unsafe_allow_html=True)

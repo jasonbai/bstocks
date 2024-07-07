@@ -211,6 +211,7 @@ def us_etf_analysis():
         cleaned_key = key.split('.')[1]
         st.title(f"{cleaned_key} - {value}")
         stock_market.combined_plots(key)
-        if count < 7:
+        if count < 1:
+            st.info("AI自动生成市场总结")
             stock_market.summarize_market_data(key)
             count += 1
