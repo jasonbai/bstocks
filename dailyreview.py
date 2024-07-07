@@ -22,40 +22,9 @@ def statement_func():
     etf_statistics3 = pd.read_csv("data/etf_statistics3.csv", usecols=lambda x: x not in pd.read_csv("data/etf_statistics3.csv", nrows=0).columns[:1])
     etf_statistics3['ETF代码'] = etf_statistics3['ETF代码'].astype(str).str.zfill(6)
 
-    # 人工智能 
-    # def summarize_market_data(df):
-    #     from openai import OpenAI   
-    #     from dotenv import load_dotenv
-    #     # 将DataFrame转换为字符串格式
-    #     df_str = df.to_string()
-    #     # DeepSeek API的配置
-    #     load_dotenv()  # 加载 .env 文件中的环境变量
-    #     api_key = os.getenv("OPENAI_API_KEY_stocks")
-    #     if not api_key:
-    #         st.error("API 密钥未设置。请设置 OPENAI_API_KEY_stocks 环境变量。")
-    #         return
+    
 
-    #     client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
-    #     # 设置请求消息
-    #     messages = [
-    #         {"role": "system", "content": "你是投资专家，根据我提供给你的数据，简要总结市场情况，并给出数据特点及后续操作建议根据我提供给你的数据，简要总结一下近期股票市场情况"},
-    #         {"role": "user", "content": f"这是今天的A股主要指数情况:\n\n{df_str}"}
-    #     ]
-
-
-    #     # 发送请求
-    #     response = client.chat.completions.create(
-    #         model="deepseek-chat",
-    #         messages=messages,
-    #         stream=False
-    #     )
-
-        
-
-    #     # 打印响应
-    #     return response.choices[0].message.content
-
-
+    # 人工智能自动生成市场总结
     def summarize_market_data(df):
         from openai import OpenAI   
         from dotenv import load_dotenv
@@ -71,15 +40,39 @@ def statement_func():
         client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
         # 设置请求消息
         messages = [
-            {"role": "system", "content": "你是投资专家，根据我提供给你的数据，简要总结市场情况，并给出数据特点及后续操作建议根据我提供给你的数据，简要总结一下近期股票市场情况"},
-            {"role": "user", "content": f"这是今天的A股主要指数情况:\n\n{df_str}"}
+            {"role": "system", "content": 
+                    '''
+                    ### 角色 
+                    你是投资专家。根据用户提供的数据，简要总结市场情况，并给出基于数据特点的提醒和后续操作建议。
+                    ## 技能 
+                    ### 技能 1：市场总结 
+                    - 分析用户提供的数据，识别市场的主要趋势和变化。
+                    - 用简明的语言总结市场情况，确保普通投资者能理解。
+
+                    ### 技能 2：投资提醒 
+                    - 根据市场总结，给出在投资时需注意的要点和潜在风险。
+                    - 提供具体的提醒，帮助投资者做出明智决定。
+
+                    ### 技能 3：操作建议
+                    - 根据数据特点，给出后续的投资操作建议。
+                    - 确保建议有实际操作性，适合不同风险偏好的投资者。
+
+                    ## 限制
+                    - 只回答与市场总结、投资提醒和操作建议相关的问题。
+                    - 内容使用markdown格式，标题只需要文本加粗即可。
+                    - 遵循用户提供的数据和语言，请勿添加不相关的信息。
+                    - 确保总结和建议简洁明了。
+                    '''
+                    },
+            {"role": "user", "content": f"这是最新的股票或ETF情况:\n\n{df_str}"}
         ]
 
         # 发送请求
         response = client.chat.completions.create(
             model="deepseek-chat",
             messages=messages,
-            stream=True
+            stream=True,
+            temperature=0.7
         )
 
         full_response = ""
@@ -92,27 +85,32 @@ def statement_func():
 
         return full_response
     # 导航栏
-    choose = option_menu(None, ["大盘情况", "ETF专题", "Tasks", 'Settings'], 
-    icons=['house', 'list-task', "list-task", 'list-task'], 
+    choose = option_menu(None, ["大盘情况", "ETF专题", "全球主要ETF"], 
+    icons=['house', 'list-task', "list-task"], 
     menu_icon="cast", default_index=0, orientation="horizontal")
     if choose == '大盘情况':
         # 大盘情况
         st.header("一、重要指数表现情况")
         st.dataframe(index_statistics, hide_index=True)
-        st.write("AI自动生成市场总结")
-        # st.markdown(summarize_market_data(index_statistics))
+        st.info("AI自动生成市场总结")
         summarize_market_data(index_statistics)
     elif choose == 'ETF专题':
         st.header("二、ETF 专题")
         st.write("以最近一周涨跌排序")
-        st.markdown("### 1. 国内宽基跟踪")
+
+        st.markdown("### 国内宽基跟踪")
         st.dataframe(etf_statistics1, hide_index=True)
-        st.markdown("### 2. 全球主要ETF")
-        st.dataframe(etf_statistics2, hide_index=True)
-        st.markdown("### 3. 行业主要ETF")
+        st.info("AI自动生成市场总结")
+        summarize_market_data(etf_statistics1)
+
+        st.markdown("### 行业主要ETF")
         st.dataframe(etf_statistics3, hide_index=True)
-    elif choose == 'Tasks':
-        st.write("Tasks page任务")
-    elif choose == 'Settings':
-        st.write("Settings page 设置")
+        st.info("AI自动生成市场总结")
+        summarize_market_data(etf_statistics3)
+    elif choose == '全球主要ETF':
+        st.header("全球主要ETF")
+        st.dataframe(etf_statistics2, hide_index=True)
+        st.info("AI自动生成市场总结")
+        summarize_market_data(etf_statistics2)
+
     return
