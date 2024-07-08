@@ -189,3 +189,4 @@ if __name__ == "__main__":
     etf_stat_3 = etf_stat_3.sort_values(by='近1周涨幅', ascending=False)
     etf_stat_3['近1周涨幅'] = (etf_stat_3['近1周涨幅']).round(2).astype(str) + '%'
     etf_stat_3.to_csv("data/etf_statistics3.csv")
+    print("数据下载完毕！")
