@@ -36,8 +36,8 @@ if __name__ == "__main__":
         from us_market import us_etf_analysis
         us_etf_analysis()
     elif selection == "基金专题":
-        from test import test_func
-        test_func()
+        from fund_market import fund_analysis
+        fund_analysis()
     elif selection == "模型专题":
         from test import test_func
         test_func()
