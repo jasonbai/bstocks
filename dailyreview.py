@@ -92,16 +92,24 @@ def statement_func():
         # 大盘情况
         st.header("一、重要指数表现情况")
         st.dataframe(index_statistics, hide_index=True)
-        st.info("AI自动生成市场总结")
-        summarize_market_data(index_statistics)
+        
+        if st.button("AI自动生成 分析报告"):
+            summarize_market_data(index_statistics)
+        else:
+            st.info("点击按钮 AI助力")
+
     elif choose == 'ETF专题':
         st.header("二、ETF 专题")
         st.write("以最近一周涨跌排序")
 
         st.markdown("### 国内宽基跟踪")
         st.dataframe(etf_statistics1, hide_index=True)
-        st.info("AI自动生成市场总结")
-        summarize_market_data(etf_statistics1)
+
+
+        if st.button("AI自动生成 分析报告"):
+            summarize_market_data(etf_statistics1)
+        else:
+            st.info("点击按钮 AI助力")
 
         st.markdown("### 行业主要ETF")
         st.dataframe(etf_statistics3, hide_index=True)

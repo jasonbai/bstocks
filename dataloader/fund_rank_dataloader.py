@@ -31,3 +31,4 @@ if __name__ == "__main__":
             print(f"{symbol} 公募基金数据下载完毕！")
         else:
             print(f"{symbol} 公募基金数据下载失败！")
+    print("基金排序下载完成！")
