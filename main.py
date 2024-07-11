@@ -5,22 +5,22 @@ import numpy as np
 import pandas as pd
 import altair as alt
 import streamlit as st
-# 设置页面布局为 "wide"
-st.set_page_config(layout="wide")
+# # 设置页面布局为 "wide"
+# st.set_page_config(layout="wide")
 
-# 添加自定义 CSS
-def add_custom_css():
-    custom_css = """
-    <style>
-    .main  {
-        padding-right: 40rem;
-    }
-    """
-    st.markdown(custom_css, unsafe_allow_html=True)
+# # 添加自定义 CSS
+# def add_custom_css():
+#     custom_css = """
+#     <style>
+#     .main  {
+#         padding-right: 40rem;
+#     }
+#     """
+#     st.markdown(custom_css, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":
-    add_custom_css()
+    # add_custom_css()
     st.sidebar.markdown("# 尾灯白的量化分析")
     st.sidebar.markdown("作者：尾灯白（GitHub：jasonbai）")
     st.sidebar.markdown("项目介绍：[stockdashboard](https://github.com/jasonbai)")
