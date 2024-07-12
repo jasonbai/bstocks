@@ -26,8 +26,8 @@ class IndexAnalyzer:
         data["近20日均值"] = data["收盘"].rolling(window=20).mean()
         data['20日移动标准差'] = data['收盘'].rolling(window=20).std()
         # 计算布林轨区间
-        data['布林轨下轨'] = data['近20日均值'] - 1.3 * data['20日移动标准差']
-        data['布林轨上轨'] = data['近20日均值'] + 1.3 * data['20日移动标准差']
+        data['布林轨下轨'] = data['近20日均值'] - 2 * data['20日移动标准差']
+        data['布林轨上轨'] = data['近20日均值'] + 2 * data['20日移动标准差']
         data['布林轨区间'] = list(zip((data['布林轨下轨']).round(2), (data['布林轨上轨']).round(2)))
         # 操作提示
         data["预警"] = data.apply(
