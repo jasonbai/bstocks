@@ -5,18 +5,17 @@ import numpy as np
 import pandas as pd
 import altair as alt
 import streamlit as st
-# # 设置页面布局为 "wide"
-# st.set_page_config(layout="wide")
+# 创建一个自定义的 CSS 样式
+custom_css = f"""
+<style>
+    .stSelectSlider {{
+        width: 50%;  /* 你可以根据需要调整这个百分比 */
+    }}
+</style>
+"""
 
-# # 添加自定义 CSS
-# def add_custom_css():
-#     custom_css = """
-#     <style>
-#     .main  {
-#         padding-right: 40rem;
-#     }
-#     """
-#     st.markdown(custom_css, unsafe_allow_html=True)
+# 将自定义 CSS 插入到页面中
+st.markdown(custom_css, unsafe_allow_html=True)
 
 
 if __name__ == "__main__":

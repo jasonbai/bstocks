@@ -214,4 +214,4 @@ def us_etf_analysis():
         if count < 1:
             st.info("AI自动生成市场总结")
             stock_market.summarize_market_data(key)
-            count += 1
+            count += 3

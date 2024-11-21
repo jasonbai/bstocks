@@ -51,7 +51,7 @@ class StockMarket:
             x='日期',
             y=alt.Y('收盘', scale=alt.Scale(domain=[pro_df['收盘'].min(), pro_df['收盘'].max()]))
         ).properties(
-            width=1200,  # 设置图表宽度
+            width=1000,  # 设置图表宽度
             height=400  # 设置图表高度
         )
         ma20_line = alt.Chart(pro_df).mark_line(color='#4793AF').encode(
@@ -108,7 +108,7 @@ class StockMarket:
             ['MA20', 'MA50', 'MA200'],
             as_=['key', 'value']
         ).properties(
-            width=1200,  # 设置图表宽度
+            width=1000,  # 设置图表宽度
             height=400  # 设置图表高度
         )
         # 增加一条横线在百分比15的位置
